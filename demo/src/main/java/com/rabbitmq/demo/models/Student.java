@@ -1,13 +1,11 @@
 package com.rabbitmq.demo.models;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 
-import java.io.Serializable;
-
-@RequiredArgsConstructor
+@AllArgsConstructor
 @Data
-public class Student implements Serializable {
+public class Student{
 
     private Integer id;
     private String firstName;
