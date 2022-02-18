@@ -1,4 +1,5 @@
 package com.rabbitmq.demo.service;
+import com.rabbitmq.demo.models.FileDB;
 import com.rabbitmq.demo.models.Student;
 import com.rabbitmq.demo.repository.FileDBRepository;
 import com.rabbitmq.demo.repository.StudentRepository;
@@ -64,6 +65,11 @@ public class FilesService {
             workbook.write(fileOutputStream);
             fileOutputStream.close();
             workbook.close();
+            byte [] bytes = Files.readAllBytes(file.toPath());
+            FileDB fileDB = new FileDB();
+            fileDB.setName(name+".xlsx");
+            fileDB.setContent(bytes);
+            fileDBRepository.save(fileDB);
 
 
         } catch (Exception e) {

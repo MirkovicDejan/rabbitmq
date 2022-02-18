@@ -20,8 +20,7 @@ public class FileDB{
     private Integer fileId;
     @Column(name = "name",nullable = false)
     private String name;
-    @Column(name ="size",nullable = false)
-    private long size;
+    @Lob
     private byte [] content;
 
 }
