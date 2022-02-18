@@ -13,7 +13,7 @@ public class FilesController {
     private final FilesService filesService;
 
      @PostMapping("/create-excel")
-     public String createFile (@RequestParam String name){
+     public byte[] createFile (@RequestParam String name){
      return filesService.createFile(name);
     }
 

@@ -19,7 +19,7 @@ public class FilesService {
     private final StudentRepository studentRepository;
     @Autowired
     private final FileDBRepository fileDBRepository;
-    public String createFile(String name) {
+    public byte[] createFile(String name) {
         try {
             Workbook workbook = new XSSFWorkbook();
             //Set size for columns
@@ -70,13 +70,14 @@ public class FilesService {
             fileDB.setName(name+".xlsx");
             fileDB.setContent(bytes);
             fileDBRepository.save(fileDB);
+            return bytes;
 
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return "Create is Finish !";
+        return null;
     }
 
 
