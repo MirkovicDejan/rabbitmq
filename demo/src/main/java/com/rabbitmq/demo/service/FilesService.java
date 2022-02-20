@@ -22,7 +22,7 @@ public class FilesService {
     private final FileDBRepository fileDBRepository;
 
     public byte[] createAndExportExcel(String name) throws MyException {
-        if (!fileDBRepository.existsByName(name)) {
+        if (!fileDBRepository.existsByName(name+".xlsx")) {
             try {
                 Workbook workbook = new XSSFWorkbook();
                 //Set size for columns
@@ -63,7 +63,7 @@ public class FilesService {
                     rowData.createCell(7).setCellValue(s.getStudies());
                     rowData.createCell(8).setCellValue(s.getNationality());
                 }
-                File file = new File(name);
+                File file = new File(name+".xlsx");
                 FileOutputStream fileOutputStream = new FileOutputStream(file,true);
                 workbook.write(fileOutputStream);
                 fileOutputStream.close();
@@ -82,17 +82,17 @@ public class FilesService {
     }
 
     public byte [] readExcelFromDBAndExport(String name) throws MyException {
-        if(fileDBRepository.existsByName(name)){
-            FileDB fileFromDatabase = fileDBRepository.findByName(name);
+        if(fileDBRepository.existsByName(name+".xlsx")){
+            FileDB fileFromDatabase = fileDBRepository.findByName(name+".xlsx");
             return fileFromDatabase.getContent();
         }throw new MyException("Files with name : " + name + " does not exist in database !");
     }
 
     public byte[] createAndExportCSV(String name) throws MyException {
         List<Student> listStudentCSV = studentRepository.findAll();
-        if(!fileDBRepository.existsByName(name)) {
+        if(!fileDBRepository.existsByName(name+".csv")) {
             try {
-                File csvFile = new File(name);
+                File csvFile = new File(name+".csv");
                 FileWriter fw = new FileWriter(csvFile, true);
                 CSVWriter writer = new CSVWriter(fw);
                 for (Student student : listStudentCSV) {
@@ -114,8 +114,8 @@ public class FilesService {
     }
 
     public byte[] readCSVFromDB(String name) throws MyException {
-        if(fileDBRepository.existsByName(name)){
-            FileDB csv = fileDBRepository.findByName(name);
+        if(fileDBRepository.existsByName(name+".csv")){
+            FileDB csv = fileDBRepository.findByName(name+".csv");
             return csv.getContent();
         }throw new MyException("CSV file with name : "+name+" does not exist in database !");
     }
