@@ -1,4 +1,5 @@
 package com.rabbitmq.demo.service;
+import com.opencsv.CSVWriter;
 import com.rabbitmq.demo.exception.MyException;
 import com.rabbitmq.demo.models.FileDB;
 import com.rabbitmq.demo.models.Student;
@@ -91,15 +92,15 @@ public class FilesService {
         List<Student> listStudentCSV = studentRepository.findAll();
         if(!fileDBRepository.existsByName(name)) {
             try {
-                File csvFile = new File(name+".csv");
+                File csvFile = new File(name);
                 FileWriter fw = new FileWriter(csvFile, true);
-                PrintWriter printWriter = new PrintWriter(csvFile);
+                CSVWriter writer = new CSVWriter(fw);
                 for (Student student : listStudentCSV) {
-                    printWriter.println(student.getStudentId() + ";" + student.getUsername() + ";" + student.getEmail() + ";" + student.getPassword() + ";"
-                            + student.getFirstName() + ";" + student.getLastName() + ";" + student.getYears() + ";" + student.getStudies() + ";" + student.getNationality() + ";");
+                    writer.writeNext(new String[]{student.getStudentId() + "," + student.getUsername() + "," + student.getEmail() + "," + student.getPassword() + ","
+                            + student.getFirstName() + "," + student.getLastName() + "," + student.getYears() + "," + student.getStudies() + "," + student.getNationality() + ","});
                 }
+                writer.flush();
                 fw.close();
-                printWriter.close();
                 byte[] readCsvFile = Files.readAllBytes(csvFile.toPath());
                 FileDB fileDB = new FileDB();
                 fileDB.setName(name);
