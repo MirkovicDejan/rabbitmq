@@ -22,4 +22,8 @@ public class FilesController {
     public byte[] readExcelFileFromDBAndExport(@RequestParam String name) throws MyException{
         return filesService.readExcelFromDBAndExport(name);
     }
+    @GetMapping("/create-and-export-csv")
+    public byte[] createAndExportCSVFile(@RequestParam String name) throws MyException {
+        return filesService.createAndExportCSV(name);
+    }
 }

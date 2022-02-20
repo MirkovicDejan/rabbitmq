@@ -10,6 +10,7 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import sun.plugin.dom.css.CSSValue;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -65,14 +66,14 @@ public class FilesService {
                     rowData.createCell(7).setCellValue(s.getStudies());
                     rowData.createCell(8).setCellValue(s.getNationality());
                 }
-                File file = new File(name + ".xlsx");
-                FileOutputStream fileOutputStream = new FileOutputStream(file);
+                File file = new File(name);
+                FileOutputStream fileOutputStream = new FileOutputStream(file,true);
                 workbook.write(fileOutputStream);
                 fileOutputStream.close();
                 workbook.close();
                 byte[] bytes = Files.readAllBytes(file.toPath());
                 FileDB fileDB = new FileDB();
-                fileDB.setName(name + ".xlsx");
+                fileDB.setName(name);
                 fileDB.setContent(bytes);
                 fileDBRepository.save(fileDB);
                 return bytes;
@@ -88,6 +89,31 @@ public class FilesService {
             FileDB fileFromDatabase = fileDBRepository.findByName(name);
             return fileFromDatabase.getContent();
         }throw new MyException("Files with name : " + name + " does not exist in database !");
+    }
+
+    public byte[] createAndExportCSV(String name) throws MyException {
+        List<Student> listStudentCSV = studentRepository.findAll();
+        if(!fileDBRepository.existsByName(name)) {
+            try {
+                File csvFile = new File(name);
+                FileWriter fw = new FileWriter(csvFile, true);
+                PrintWriter printWriter = new PrintWriter(csvFile);
+                for (Student student : listStudentCSV) {
+                    printWriter.println(student.getStudentId() + ";" + student.getUsername() + ";" + student.getEmail() + ";" + student.getPassword() + ";"
+                            + student.getFirstName() + ";" + student.getLastName() + ";" + student.getYears() + ";" + student.getStudies() + ";" + student.getNationality());
+                }
+                fw.close();
+                printWriter.close();
+                byte[] readCsvFile = Files.readAllBytes(csvFile.toPath());
+                FileDB fileDB = new FileDB();
+                fileDB.setName(name);
+                fileDB.setContent(readCsvFile);
+                fileDBRepository.save(fileDB);
+                return readCsvFile;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } throw new MyException("File with name : "+name+" exist in database !");
     }
 }
 
