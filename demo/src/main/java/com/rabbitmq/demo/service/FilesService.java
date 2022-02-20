@@ -1,5 +1,4 @@
 package com.rabbitmq.demo.service;
-
 import com.rabbitmq.demo.exception.MyException;
 import com.rabbitmq.demo.models.FileDB;
 import com.rabbitmq.demo.models.Student;
@@ -10,12 +9,9 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import sun.plugin.dom.css.CSSValue;
-
 import java.io.*;
 import java.nio.file.Files;
 import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 public class FilesService {
@@ -29,7 +25,7 @@ public class FilesService {
             try {
                 Workbook workbook = new XSSFWorkbook();
                 //Set size for columns
-                Sheet sheet = workbook.createSheet("student");
+                Sheet sheet = workbook.createSheet(name);
                 sheet.setColumnWidth(0, 1000);
                 sheet.setColumnWidth(1, 3000);
                 sheet.setColumnWidth(2, 6000);
@@ -95,12 +91,12 @@ public class FilesService {
         List<Student> listStudentCSV = studentRepository.findAll();
         if(!fileDBRepository.existsByName(name)) {
             try {
-                File csvFile = new File(name);
+                File csvFile = new File(name+".csv");
                 FileWriter fw = new FileWriter(csvFile, true);
                 PrintWriter printWriter = new PrintWriter(csvFile);
                 for (Student student : listStudentCSV) {
                     printWriter.println(student.getStudentId() + ";" + student.getUsername() + ";" + student.getEmail() + ";" + student.getPassword() + ";"
-                            + student.getFirstName() + ";" + student.getLastName() + ";" + student.getYears() + ";" + student.getStudies() + ";" + student.getNationality());
+                            + student.getFirstName() + ";" + student.getLastName() + ";" + student.getYears() + ";" + student.getStudies() + ";" + student.getNationality() + ";");
                 }
                 fw.close();
                 printWriter.close();
