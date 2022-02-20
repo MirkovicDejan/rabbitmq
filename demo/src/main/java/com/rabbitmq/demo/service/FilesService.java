@@ -115,6 +115,13 @@ public class FilesService {
             }
         } throw new MyException("File with name : "+name+" exist in database !");
     }
+
+    public byte[] readCSVFromDB(String name) throws MyException {
+        if(fileDBRepository.existsByName(name)){
+            FileDB csv = fileDBRepository.findByName(name);
+            return csv.getContent();
+        }throw new MyException("CSV file with name : "+name+" does not exist in database !");
+    }
 }
 
 
