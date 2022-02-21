@@ -1,11 +1,13 @@
 package com.rabbitmq.demo.controller;
 
 import com.rabbitmq.demo.exception.MyException;
-import com.rabbitmq.demo.models.FileDB;
 import com.rabbitmq.demo.service.FilesService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
 
 
 @RestController
@@ -30,4 +32,15 @@ public class FilesController {
     public byte[] readCSVFileFromDB(@RequestParam String name) throws MyException {
         return filesService.readCSVFromDB(name);
     }
+    //export without save in Local disc
+    @GetMapping("/export-excel")
+    public byte[] exportExcel(@RequestParam String name) throws MyException {
+        return filesService.exportExcel(name);
+    }
+    //export csv without save in Local disc
+    @GetMapping("/export-csv")
+    public void exportCsv(@RequestParam String name, HttpServletResponse response) throws MyException {
+         filesService.exportCSV(name,response);
+    }
+
 }

@@ -1,6 +1,6 @@
 package com.rabbitmq.demo.exception;
 
-public class MyException extends  Exception{
+public class MyException extends Exception{
     public MyException (String message){
         super(message);
     }
