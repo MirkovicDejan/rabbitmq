@@ -39,7 +39,7 @@ public class FilesController {
     }
     //export csv without save in Local disc
     @GetMapping("/export-csv")
-    public void exportCsv(@RequestParam String name, HttpServletResponse response) throws MyException {
+    public void exportCsv(@RequestParam String name,HttpServletResponse response){
          filesService.exportCSV(name,response);
     }
 

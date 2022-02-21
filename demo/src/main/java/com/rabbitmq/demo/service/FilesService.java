@@ -14,7 +14,6 @@ import org.supercsv.io.CsvBeanWriter;
 import org.supercsv.io.ICsvBeanWriter;
 import org.supercsv.prefs.CsvPreference;
 
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.nio.file.Files;
@@ -135,7 +134,7 @@ public class FilesService {
     //export excel without save excel on disc
     public byte[] exportExcel(String name) throws MyException {
         XSSFWorkbook workbook = new XSSFWorkbook();
-        Sheet sheet = workbook.createSheet("student");
+        Sheet sheet = workbook.createSheet(name);
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         List<Student> listStudent;
         if(!fileDBRepository.existsByName(name+".xlsx")){
@@ -189,7 +188,7 @@ public class FilesService {
         }throw new MyException("File with name : "+name+" exist in db!");
     }
 
-    public void exportCSV(String name, HttpServletResponse response) throws MyException {
+    public void exportCSV(String name, HttpServletResponse response){
         List<Student>studentList = studentRepository.findAll();
         response.setContentType("text/csv");
         DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
@@ -201,7 +200,6 @@ public class FilesService {
                 ICsvBeanWriter csvWriter = new CsvBeanWriter(response.getWriter(), CsvPreference.STANDARD_PREFERENCE);
                 String[] csvHeader = {"ID","USERNAME","EMAIL","PASSWORD","FIRST NAME","LAST NAME","YEARS","STUDIES","NATIONALITY"};
                 String[] nameMapping = {"studentId","username","email","password","firstName","lastName","years","studies","nationality"};
-
                 csvWriter.writeHeader(csvHeader);
                 for(Student student:studentList){
                     csvWriter.write(student, nameMapping);
